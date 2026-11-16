@@ -1,0 +1,611 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1920, height=1080">
+<title>Don't Pay That Lab Bill Yet</title>
+<style>
+@font-face{font-family:"Inter";font-weight:400;src:url(assets/fonts/inter-latin-400-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:600;src:url(assets/fonts/inter-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:700;src:url(assets/fonts/inter-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:800;src:url(assets/fonts/inter-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:900;src:url(assets/fonts/inter-latin-900-normal.woff2) format("woff2")}
+/* House style: matches the Allen & Associates "16 Things" handbook video */
+:root{--navy:#0B1F3A;--navy2:#132B4F;--navy3:#1D3A66;--gold:#D4A62A;--gold2:#F3C94B;--green:#1E9E5A;--green2:#E3F5EA;--coral:#E5533D;--coral2:#FDE9E5;
+  --amber:#F2A900;--amber2:#FFF4D6;--ink:#0E1B2C;--muted:#5B6B80;--line:#E3E8EF;--blue:#1B6FD1}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1920px;height:1080px;background:#000;overflow:hidden;font-family:Inter,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#root{position:relative;width:1920px;height:1080px;overflow:hidden}
+.a{visibility:hidden;opacity:0}
+.abs{position:absolute}
+svg{display:block}
+
+/* ---------- avatar (full frame, shifts left when the stage opens) ---------- */
+#avBg,#av{position:absolute;left:0;top:0;width:1920px;height:1080px}
+#avBg{filter:blur(36px) brightness(.55);transform:scale(1.15)}
+#av{transform-origin:960px 0px}
+#avBg img,#av img,#av video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.media-img{display:none}
+.render .media-img{display:block}.render #avvid{visibility:hidden}
+
+/* ---------- scene 1: floating invoice ---------- */
+#inv{left:1392px;top:120px;width:470px;background:#fff;border-radius:16px;padding:26px 28px 28px;box-shadow:0 40px 80px rgba(0,0,0,.45),0 6px 18px rgba(0,0,0,.3)}
+#inv .k{font-size:13px;font-weight:900;letter-spacing:2px;color:var(--muted)}
+#inv .lab{font-size:24px;font-weight:900;color:var(--navy);margin-top:4px;letter-spacing:-.4px}
+#inv .rows{margin-top:14px;border-top:2px solid var(--line);padding-top:6px}
+#inv .rows div{display:flex;justify-content:space-between;font-size:18px;font-weight:600;padding:7px 0;border-bottom:1px dashed var(--line)}
+#inv .rows span:first-child{color:var(--muted)}
+#inv .rows b{color:var(--navy);font-weight:800}
+#inv .due{display:flex;justify-content:space-between;align-items:flex-end;margin-top:16px}
+#inv .due .l{font-size:15px;font-weight:900;letter-spacing:2px;color:var(--navy)}
+#inv .due .v{font-size:64px;font-weight:900;letter-spacing:-2px;color:var(--coral);line-height:1}
+.stamp{border:7px solid #B3261E;color:#B3261E;font-weight:900;line-height:1.05;padding:12px 18px;border-radius:14px;text-align:center;background:rgba(255,255,255,.55)}
+#stRed{left:1420px;top:300px;font-size:30px;transform:rotate(-8deg)}
+#stGreen{left:1500px;top:470px;font-size:24px;letter-spacing:1px;color:#fff;background:var(--green);border:5px solid #fff;border-radius:18px;padding:14px 24px;transform:rotate(4deg);box-shadow:0 24px 50px rgba(0,0,0,.45)}
+#stGreen b{display:block;font-size:68px;letter-spacing:-2px}
+#cap1{left:1360px;top:700px;width:530px;text-align:center}
+.capPill{display:inline-flex;align-items:center;gap:10px;background:rgba(11,31,58,.92);color:#fff;font-weight:700;font-size:22px;padding:12px 22px;border-radius:999px;border:2px solid var(--gold);letter-spacing:.2px}
+.capPill svg{width:26px;height:26px}
+
+/* ---------- stage ---------- */
+#stage{left:1030px;top:40px;width:860px;height:1000px;border-radius:30px;background:linear-gradient(160deg,rgba(17,40,74,.97),rgba(9,25,48,.97));box-shadow:0 30px 80px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);overflow:hidden}
+#stage:before{content:"";position:absolute;left:0;top:0;right:0;height:5px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold))}
+#tabs{left:24px;top:26px;width:812px;display:flex;gap:6px}
+.tab{flex:1;height:44px;border-radius:12px;background:rgba(255,255,255,.06);color:rgba(255,255,255,.55);font-weight:700;font-size:15px;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;border:1px solid rgba(255,255,255,.07)}
+.tab b{display:inline-flex;width:22px;height:22px;border-radius:50%;background:rgba(255,255,255,.12);align-items:center;justify-content:center;font-size:12px}
+#prog{left:24px;top:82px;width:812px;display:flex;gap:4px;align-items:center}
+.seg{flex:1;height:8px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}
+.seg i{display:block;height:100%;background:var(--gold);transform-origin:left;transform:scaleX(0)}
+#progLbl{right:24px;top:96px;color:rgba(255,255,255,.6);font-size:14px;font-weight:700;letter-spacing:1.5px}
+.screen{left:24px;top:130px;width:812px}
+
+/* authority */
+.auth{background:#fff;border-radius:24px;padding:34px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.auth .logo{width:100%;height:180px;background:url(assets/logo.jpg) center/contain no-repeat;margin-bottom:24px}
+.auth .nm{font-size:58px;font-weight:900;letter-spacing:-1px;color:var(--navy)}
+.auth .rl{font-size:28px;font-weight:600;color:var(--muted);margin-top:4px}
+.auth .bar{height:4px;width:120px;background:var(--gold);border-radius:2px;margin:22px 0}
+.pillrow{display:flex;gap:12px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:22px;padding:12px 18px;border-radius:999px;background:var(--navy);color:#fff}
+.pill.gold{background:var(--gold);color:var(--navy)}
+.pill.green{background:var(--green2);color:#0f6b3a;border:2px solid #9ad7b2}
+.pill.coral{background:var(--coral2);color:#a52b18;border:2px solid #f2b1a5}
+.pill.light{background:#EEF3F9;color:var(--navy);border:2px solid #d5deea}
+.pill svg{width:24px;height:24px}
+/* part title */
+.partT{color:#fff;text-align:left;padding:40px 20px}
+.partT .k{font-size:22px;font-weight:800;letter-spacing:4px;color:var(--gold2)}
+.partT .h{font-size:64px;font-weight:900;line-height:1.05;margin-top:16px;letter-spacing:-1px}
+.partT .h span{color:var(--gold2)}
+.row{position:absolute;left:24px;width:812px;height:72px;border-radius:14px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);display:flex;align-items:center;gap:16px;padding:0 18px;color:#fff;font-weight:700;font-size:24px}
+.row .rn{flex:none;width:42px;height:42px;border-radius:10px;background:var(--gold);color:var(--navy);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:19px}
+/* cards */
+.card{position:absolute;left:24px;top:130px;width:812px;background:#fff;border-radius:24px;padding:24px 26px 26px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+.chead{display:flex;align-items:center;gap:18px;margin-bottom:18px}
+.num{flex:none;width:74px;height:74px;border-radius:18px;background:var(--navy);color:var(--gold2);font-weight:900;font-size:32px;display:flex;align-items:center;justify-content:center}
+.ttl{font-size:36px;font-weight:900;letter-spacing:-.6px;line-height:1.05;color:var(--navy)}
+.sub{font-size:19px;font-weight:600;color:var(--muted);margin-top:6px}
+.date{margin-left:auto;flex:none;background:#EEF3F9;color:var(--navy);font-weight:800;font-size:17px;padding:9px 14px;border-radius:10px;border:2px solid #d5deea;text-align:center;line-height:1.15}
+.part{margin-top:16px}
+.bigstat{display:flex;align-items:center;gap:20px;padding:18px 22px;border-radius:18px}
+.money{font-size:72px;font-weight:900;letter-spacing:-2px;line-height:1}
+.warnrow{display:flex;align-items:center;gap:16px;background:var(--coral2);border:2px solid #f3a99b;border-left:10px solid var(--coral);border-radius:14px;padding:14px 18px;font-size:23px;font-weight:800;color:#8f2412;margin-top:12px}
+.xic{flex:none;width:40px;height:40px;border-radius:50%;background:var(--coral);color:#fff;display:flex;align-items:center;justify-content:center}
+.cic{flex:none;width:40px;height:40px;border-radius:50%;background:var(--green);color:#fff;display:flex;align-items:center;justify-content:center}
+.cic svg,.xic svg{width:24px;height:24px}
+.lst{display:flex;align-items:center;gap:14px;font-size:23px;line-height:1.25;font-weight:700;padding:9px 0;color:var(--ink)}
+.lst b{color:var(--navy);font-weight:900}
+.box{border-radius:18px;padding:18px;border:2px solid var(--line);background:#F8FAFC}
+.lbl2{font-size:14px;font-weight:900;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.hlw{position:relative;display:inline-block;z-index:0}
+.hlw i{position:absolute;left:-4px;right:-4px;top:8%;bottom:4%;background:rgba(255,214,0,.55);border-radius:4px;transform-origin:left;transform:scaleX(0);z-index:-1}
+.ckn{flex:none;width:40px;height:40px;border-radius:50%;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:18px;color:var(--muted);position:relative}
+.ckn .cic{position:absolute;inset:-3px;width:auto;height:auto;transform:scale(0)}
+table.pd{width:100%;border-collapse:separate;border-spacing:0 10px}
+table.pd th{font-size:15px;letter-spacing:2px;color:var(--muted);font-weight:900;text-align:left;padding:0 14px}
+table.pd td{background:#F4F7FB;padding:16px 14px;font-size:26px;font-weight:800}
+table.pd td:first-child{border-radius:14px 0 0 14px;color:var(--navy)}
+table.pd td:last-child{border-radius:0 14px 14px 0;text-align:right}
+.oldv{position:relative;display:inline-block}
+.oldv i{position:absolute;left:-4px;right:-4px;top:50%;height:4px;background:#8592a3;transform-origin:left;transform:scaleX(0)}
+.searchbar{display:flex;align-items:center;gap:14px;border:3px solid var(--blue);border-radius:16px;padding:14px 18px;font-size:26px;font-weight:600;color:var(--ink);background:#fff}
+.searchbar svg{width:30px;height:30px;color:var(--blue)}
+.cursor{display:inline-block;width:3px;height:30px;background:var(--blue);vertical-align:middle;margin-left:2px}
+/* official source clips (same treatment as the handbook clips in the reference video) */
+.hb{background:#F4F6F9;border:1px solid var(--line);border-radius:16px;padding:12px 14px 14px}
+.hbtag{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:800;letter-spacing:1.3px;color:var(--muted);margin-bottom:8px}
+.hbtag i{display:inline-block;width:16px;height:16px;border-radius:4px;background:var(--blue)}
+.hbimg{position:relative;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.08);margin:0 auto}
+.hbimg img{display:block;width:100%;height:100%}
+.hl{position:absolute;background:rgba(255,214,0,.42);mix-blend-mode:multiply;transform-origin:left center;border-radius:3px;transform:scaleX(0)}
+.hlb{position:absolute;border:4px solid var(--coral);border-radius:8px;transform:scale(0)}
+#c4d .lst{font-size:21px}
+/* timeline (chapter 1) */
+.track{position:relative;height:30px;border-radius:15px;background:#E6ECF3}
+.track i{position:absolute;left:0;top:0;bottom:0;width:100%;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#1B6FD1,var(--coral) 40%,var(--green));border-radius:15px}
+.marks{position:relative;height:96px;margin-top:10px}
+.mk{position:absolute;top:0;transform:translateX(-50%);text-align:center;white-space:nowrap}
+.mk .d{font-size:22px;font-weight:900}
+.mk .t{font-size:16px;font-weight:700;color:var(--muted);margin-top:2px}
+.mk .p{width:4px;height:16px;margin:0 auto 6px;border-radius:2px}
+#gap{position:absolute;left:31%;right:-6px;top:-6px;height:42px;border:4px solid var(--coral);border-radius:14px}
+/* alerts */
+.alert{left:40px;top:770px;width:1840px;height:270px;border-radius:26px;background:linear-gradient(90deg,#FFB400,#F29A00);box-shadow:0 30px 70px rgba(0,0,0,.5);display:flex;align-items:center;padding:0 46px;gap:36px;color:#2a1a00;overflow:hidden}
+.alert .wi{flex:none;width:150px;height:150px}
+.alert .t1{font-size:26px;font-weight:900;letter-spacing:5px}
+.alert .t2{font-size:46px;font-weight:900;line-height:1.08;letter-spacing:-.8px;margin-top:8px}
+.alert .t2 span{background:#2a1a00;color:#FFC93C;padding:0 12px;border-radius:8px}
+.alert .stamp{flex:none;margin-left:auto;font-size:34px;transform:rotate(-8deg);background:rgba(255,255,255,.35)}
+/* interstitial flip board */
+#flipS{left:0;top:0;width:1920px;height:1080px;background:radial-gradient(circle at 50% 40%,#17345f,#081629 70%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+.flipRow{display:flex;gap:10px;perspective:900px}
+.fl{width:96px;height:132px;background:#0e2442;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:92px;font-weight:900;color:#fff;box-shadow:inset 0 -3px 0 rgba(0,0,0,.4),0 10px 20px rgba(0,0,0,.4);position:relative;border:1px solid rgba(255,255,255,.08)}
+.fl:after{content:"";position:absolute;left:0;right:0;top:50%;height:2px;background:rgba(0,0,0,.45)}
+.fl.g{color:var(--gold2)}
+.fl.sp{background:transparent;box-shadow:none;border:0;width:30px}
+.fl.sp:after{display:none}
+/* end card */
+#end{left:0;top:0;width:1920px;height:1080px;background:radial-gradient(circle at 50% 45%,#17345f,#071426 75%);display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff}
+.endLogo{width:760px;height:240px;background:#fff url(assets/logo.jpg) center/contain no-repeat;background-origin:content-box;padding:22px 30px;border-radius:28px;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.digit{display:inline-block}
+#disc{left:1030px;top:1046px;width:860px;text-align:center;font-size:13px;font-weight:600;color:rgba(255,255,255,.75);text-shadow:0 1px 3px rgba(0,0,0,.6)}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="main" data-width="1920" data-height="1080" data-start="0" data-duration="300" data-fps="25">
+
+  <!-- Avatar: the original HeyGen take with its own narration -->
+  <div id="avBg"><img class="media-img" id="avimgBg" alt=""></div>
+  <div id="av">
+    <video id="avvid" src="../Stop Paying Fake Medicare Lab Bills_1080p.mp4" data-start="0" data-duration="297.68" data-track-index="0" playsinline preload="auto"></video>
+    <img class="media-img" id="avimg" alt="">
+  </div>
+
+  <!-- ===== Scene 1: the premature lab bill (full-frame avatar) ===== -->
+  <div id="inv" class="abs a">
+    <div class="k">PATIENT STATEMENT</div>
+    <div class="lab">Clinical Laboratory Invoice</div>
+    <div class="rows">
+      <div><span>Statement date</span><b>Aug 21</b></div>
+      <div><span>Date of service</span><b>Aug 13</b></div>
+      <div><span>Service</span><b>Diagnostic blood panel</b></div>
+      <div><span>Medicare status</span><b>Pending</b></div>
+    </div>
+    <div class="due"><span class="l">AMOUNT DUE</span><span class="v" id="invAmt">$0.00</span></div>
+  </div>
+  <div id="stRed" class="abs a stamp">AMOUNT DUE<br>IMMEDIATELY</div>
+  <div id="stGreen" class="abs a">ACTUAL AMOUNT OWED<b>$0.00</b></div>
+  <div id="cap1" class="abs a"><span class="capPill"><svg viewBox="0 0 24 24" fill="none" stroke="#F3C94B" stroke-width="2.4" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01" stroke-linecap="round"/></svg>Overpayments can take up to <span style="color:var(--gold2)">3 years</span> to recover</span></div>
+
+  <!-- ===== STAGE ===== -->
+  <div id="stage" class="abs a">
+    <div id="tabs" class="abs a">
+      <div class="tab" id="t1"><b>1</b>The Trap</div>
+      <div class="tab" id="t2"><b>2</b>$874 vs $0</div>
+      <div class="tab" id="t3"><b>3</b>Medicare.gov</div>
+      <div class="tab" id="t4"><b>4</b>The ABN Rule</div>
+      <div class="tab" id="t5"><b>5</b>Action Plan</div>
+    </div>
+    <div id="prog" class="abs a"><div class="seg"><i id="sg1"></i></div><div class="seg"><i id="sg2"></i></div><div class="seg"><i id="sg3"></i></div><div class="seg"><i id="sg4"></i></div><div class="seg"><i id="sg5"></i></div></div>
+    <div id="progLbl" class="abs a">CHAPTER <span id="progN">01</span> / 05</div>
+
+    <!-- authority -->
+    <div id="sAuth" class="screen abs a" style="top:120px">
+      <div class="auth">
+        <div class="logo"></div>
+        <div class="nm">Arric Allen</div>
+        <div class="rl">Principal · Allen &amp; Associates</div>
+        <div class="bar"></div>
+        <div class="pillrow">
+          <span class="pill gold a" id="au1">Helping Seniors Since 1994</span>
+          <span class="pill light a" id="au2">Plain-English Medicare Facts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- agenda -->
+    <div id="sAg" class="screen abs a">
+      <div class="partT" style="padding:20px 6px">
+        <div class="k">TODAY'S BREAKDOWN</div>
+        <div class="h">Before you pay that <span>lab bill</span></div>
+      </div>
+    </div>
+    <div class="row a" id="ag1" style="top:430px"><div class="rn">1</div>Why labs send inflated bills too early</div>
+    <div class="row a" id="ag2" style="top:516px"><div class="rn">2</div>Check your real balance on Medicare.gov</div>
+    <div class="row a" id="ag3" style="top:602px"><div class="rn">3</div>How one form, the ABN, protects your wallet</div>
+
+    <!-- chapter 1: timeline -->
+    <div class="card a" id="c1">
+      <div class="chead"><div class="num">1</div><div><div class="ttl">The Premature Bill</div><div class="sub">A real-world Medicare billing timeline</div></div><div class="date">Aug 13<br>→ Sep 8</div></div>
+      <div class="part box a" id="c1tl" style="padding:26px 24px 8px">
+        <div class="track"><i id="c1bar"></i><div id="gap" class="a"></div></div>
+        <div class="marks">
+          <div class="mk a" id="mk1" style="left:0;transform:none;text-align:left"><div class="p" style="background:#1B6FD1;margin:0 0 6px 4px"></div><div class="d" style="color:#1B6FD1">AUG 13</div><div class="t">Blood work ordered</div></div>
+          <div class="mk a" id="mk2" style="left:31%"><div class="p" style="background:var(--coral)"></div><div class="d" style="color:var(--coral)">AUG 21 <span style="font-size:15px">+8 DAYS</span></div><div class="t">Lab mails the bill</div></div>
+          <div class="mk a" id="mk3" style="right:0;left:auto;transform:none;text-align:right"><div class="p" style="background:var(--green);margin:0 4px 6px auto"></div><div class="d" style="color:var(--green)">SEP 8</div><div class="t">Medicare processes claim</div></div>
+        </div>
+      </div>
+      <div class="part" style="display:flex;gap:14px">
+        <div class="bigstat a" id="c1b" style="flex:1;background:var(--coral2);border:2px solid #f2b1a5"><div><div class="lbl2" style="color:#a52b18">LAB BILL · DUE UPON RECEIPT</div><div class="money" style="color:var(--coral)" id="c1bv">$0.00</div></div></div>
+        <div class="bigstat a" id="c1g" style="flex:1;background:var(--green2);border:2px solid #9ad7b2"><div><div class="lbl2" style="color:#0f6b3a">AFTER MEDICARE PROCESSED</div><div class="money" style="color:var(--green)">$0.00</div></div></div>
+      </div>
+      <div class="pill gold a" id="c1p" style="margin-top:16px;font-size:20px">Medicare claim still processing…</div>
+      <div class="warnrow a" id="c1w"><span class="xic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 6v8M12 18h.01"/></svg></span>Billed 18 days BEFORE Medicare processed the claim</div>
+    </div>
+
+    <!-- chapter 2: the numbers -->
+    <div class="card a" id="c2">
+      <div class="chead"><div class="num">2</div><div><div class="ttl">Invoice vs. Medicare</div><div class="sub">Lab invoice side by side with the claim summary</div></div><div class="date">Original<br>Medicare</div></div>
+      <table class="pd">
+        <tr><th>LINE</th><th style="text-align:right">AMOUNT</th></tr>
+        <tr class="a" id="c2r1"><td>Lab's retail charge <span class="pill coral a" id="c2x" style="font-size:16px;padding:6px 12px;margin-left:8px">9.5× Medicare's rate</span></td><td><span class="oldv" style="color:var(--coral)"><span id="c2v1">$0.00</span><i id="c2s"></i></span></td></tr>
+        <tr class="a" id="c2r2"><td>Medicare-approved amount</td><td style="color:var(--navy)">$92.38</td></tr>
+      </table>
+      <div class="part bigstat a" id="c2o" style="background:var(--green2);border:3px solid var(--green);justify-content:space-between">
+        <div><div class="lbl2" style="color:#0f6b3a">YOUR PATIENT RESPONSIBILITY</div><div style="font-size:22px;font-weight:800;color:#0f6b3a">Covered clinical lab test</div></div>
+        <div style="display:flex;align-items:center;gap:16px"><span class="cic a" id="c2l" style="width:56px;height:56px;border-radius:16px"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" style="width:30px;height:30px"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span><div class="money" style="color:var(--green)" id="c2v3">$92.38</div></div>
+      </div>
+      <div class="part pillrow">
+        <span class="pill light a" id="c2p1">Assignment = payment in full</span>
+        <span class="pill green a" id="c2p2">$0 Part B deductible</span>
+        <span class="pill green a" id="c2p3">0% coinsurance</span>
+      </div>
+    </div>
+
+    <!-- chapter 3: Medicare.gov -->
+    <div class="card a" id="c3">
+      <div class="chead"><div class="num">3</div><div><div class="ttl">Check Medicare.gov First</div><div class="sub">Verify what you truly owe in 4 steps</div></div><div class="date">Before<br>you pay</div></div>
+      <div class="warnrow a" id="c3w" style="margin-top:0"><span class="xic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Don't reach for your credit card. Urgent ≠ owed.</div>
+      <div class="part">
+        <div class="lst a" id="c3a"><span class="ckn">1<span class="cic"></span></span>Go to <b>Medicare.gov</b> → click <b>Log in</b> (top right)</div>
+        <div class="lst a" id="c3b"><span class="ckn">2<span class="cic"></span></span>Sign in with <b>Login.gov</b>, <b>ID.me</b> or Medicare credentials</div>
+        <div class="lst a" id="c3c2"><span class="ckn">3<span class="cic"></span></span>Select <b>Check My Claims</b></div>
+        <div class="lst a" id="c3d"><span class="ckn">4<span class="cic"></span></span>Match the date of service → <span class="hlw"><i id="c3h"></i><b>Total You May Be Billed</b></span></div>
+      </div>
+      <div class="part" style="position:relative;height:384px">
+        <div class="hb abs a" id="clHome" style="left:0;right:0;top:0">
+          <div class="hbtag"><i></i>MEDICARE.GOV · OFFICIAL U.S. GOVERNMENT SITE</div>
+          <div class="hbimg" style="width:731px;height:330px"><img src="assets/clips/medicare_home.png" alt="">
+            <div class="hl" id="hlGov" style="left:0.5%;top:0;width:24%;height:3.4%"></div>
+            <div class="hlb" id="hlLogin" style="left:93.4%;top:3.6%;width:5.8%;height:8%"></div></div>
+        </div>
+        <div class="hb abs a" id="clLogin" style="left:0;right:0;top:0">
+          <div class="hbtag"><i></i>MEDICARE.GOV · LOG IN TO YOUR ACCOUNT</div>
+          <div class="hbimg" style="width:615px;height:330px"><img src="assets/clips/medicare_login.png" alt="">
+            <div class="hl" id="hlLg" style="left:0;top:69%;width:100%;height:31%"></div>
+            <div class="hl" id="hlId" style="left:0;top:0;width:100%;height:30.5%"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chapter 4a: ABN -->
+    <div class="card a" id="c4">
+      <div class="chead"><div class="num">4</div><div><div class="ttl">The ABN Rule</div><div class="sub">Advance Beneficiary Notice of Noncoverage</div></div><div class="date">Before<br>the test</div></div>
+      <div class="lbl2">WHEN MEDICARE MAY DENY A BLOOD TEST</div>
+      <div class="pillrow">
+        <span class="pill coral a" id="c4p1">Ordered too frequently</span>
+        <span class="pill coral a" id="c4p2">Not medically necessary</span>
+      </div>
+      <div class="part" style="display:flex;gap:16px;align-items:flex-start">
+      <div class="hb a" id="clAbn" style="flex:none;width:410px">
+        <div class="hbtag"><i></i>CMS FORM CMS-R-131 · ABN</div>
+        <div class="hbimg" style="width:380px;height:340px"><img src="assets/clips/cms_abn_form.png" alt="">
+          <div class="hl" id="hlA1" style="left:0.6%;top:16.6%;width:40%;height:18%"></div>
+          <div class="hl" id="hlA2" style="left:40.8%;top:16.6%;width:38.4%;height:18%"></div>
+          <div class="hl" id="hlA3" style="left:79.4%;top:16.6%;width:20.4%;height:18%"></div>
+          <div class="hl" id="hlA4" style="left:1.5%;top:63%;width:96%;height:6.4%"></div></div>
+      </div>
+      <div class="box a" id="c4d" style="flex:1;font-size:21px">
+        <div style="font-size:24px;font-weight:900;color:var(--navy);margin-bottom:6px">A valid ABN must list:</div>
+        <div class="lst a" id="c4r1"><span class="ckn"><span class="cic"></span></span>The <b>specific test</b></div>
+        <div class="lst a" id="c4r2"><span class="ckn"><span class="cic"></span></span>The <b>reason</b> it may be denied</div>
+        <div class="lst a" id="c4r3"><span class="ckn"><span class="cic"></span></span>An <b>estimated cost</b> + your claim choice</div>
+      </div>
+      </div>
+      <div class="part pillrow">
+        <span class="pill a" id="c4b">Given BEFORE your blood is drawn</span>
+      </div>
+      <div class="warnrow a" id="c4w"><span class="xic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></span>Not a vague blanket waiver</div>
+    </div>
+
+    <!-- chapter 4b: owe $0 vs wellness -->
+    <div class="card a" id="c5">
+      <div class="chead"><div class="num">4</div><div><div class="ttl">When You Owe $0</div><div class="sub">…and the one key exception</div></div><div class="date">ABN<br>protections</div></div>
+      <div style="display:flex;gap:14px">
+        <div class="box a" id="c5g" style="flex:1;border-color:#9ad7b2;background:#F3FBF6">
+          <div class="lbl2" style="color:#0f6b3a">NORMALLY COVERED TEST DENIED</div>
+          <div style="font-size:22px;font-weight:800;color:var(--ink);line-height:1.3">No valid ABN signed before the test</div>
+          <div class="bigstat a" id="c5gr" style="margin-top:14px;background:var(--green);color:#fff;padding:14px 16px"><span class="cic" style="background:#fff"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E5A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div style="font-size:28px;font-weight:900;line-height:1.1">You generally owe $0</div></div>
+        </div>
+        <div class="box a" id="c5a" style="flex:1;border-color:#f5d27a;background:#FFFBEF">
+          <div class="lbl2" style="color:#8a5a00">NEVER-COVERED WELLNESS TEST</div>
+          <div style="font-size:22px;font-weight:800;color:var(--ink);line-height:1.3">e.g., a <span class="hlw"><i id="c5h"></i>biological age panel</span></div>
+          <div class="bigstat a" id="c5ar" style="margin-top:14px;background:var(--amber);color:#2a1a00;padding:14px 16px"><span class="xic" style="background:#2a1a00"><svg viewBox="0 0 24 24" fill="none" stroke="#FFC93C" stroke-width="3" stroke-linecap="round"><path d="M12 6v8M12 18h.01"/></svg></span><div style="font-size:24px;font-weight:900;line-height:1.1">No ABN needed. You pay retail.</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- chapter 5: checklist -->
+    <div class="card a" id="c6">
+      <div class="chead"><div class="num">5</div><div><div class="ttl">Bill Protection Checklist</div><div class="sub">Before you pay any medical bill</div></div><div class="date">Action<br>plan</div></div>
+      <div class="lst a" id="c6a"><span class="ckn">1<span class="cic"></span></span>Confirm the claim is processed on <b>Medicare.gov</b></div>
+      <div class="lst a" id="c6b"><span class="ckn">2<span class="cic"></span></span>Verify <b>"Total You May Be Billed"</b></div>
+      <div class="lst a" id="c6c"><span class="ckn">3<span class="cic"></span></span>Request your <b>signed ABN</b> if a test was denied</div>
+      <div class="pill gold a" id="c6n" style="margin:2px 0 6px 54px;font-size:18px;padding:8px 14px">Providers keep it on file 5 years</div>
+      <div class="lst a" id="c6d"><span class="ckn">4<span class="cic"></span></span>Dispute wrong bills with the lab's billing office</div>
+      <div class="warnrow a" id="c6w"><span class="xic"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 6v8M12 18h.01"/></svg></span><span>Never ignore collections: <span class="hlw"><i id="c6h"></i>dispute in writing &amp; keep copies</span></span></div>
+    </div>
+
+    <!-- remember -->
+    <div id="sRem" class="screen abs a" style="top:200px">
+      <div class="partT" style="padding:10px 6px">
+        <div class="k">REMEMBER</div>
+        <div class="h" style="font-size:66px">A bill in your mailbox is <span>not proof</span> you owe it.</div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div id="sCTA" class="screen abs a" style="top:130px">
+      <div class="card a" id="ctaA" style="position:relative;left:0;top:0">
+        <div class="lbl2">CHECK CLAIMS &amp; COMPARE PLANS YOURSELF</div>
+        <div style="display:flex;align-items:center;gap:20px">
+          <svg viewBox="0 0 24 24" width="76" height="76" fill="none" stroke="#1B6FD1" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+          <div><div style="font-size:54px;font-weight:900;color:var(--blue);letter-spacing:-1px;transform-origin:left" id="mgov">Medicare.gov</div>
+          <div style="font-size:20px;font-weight:700;color:var(--muted)">Official U.S. Government claims &amp; plan portal</div></div>
+        </div>
+      </div>
+      <div class="a" id="ctaB" style="margin-top:22px;border-radius:26px;background:linear-gradient(160deg,#0B1F3A,#13305a);border:3px solid var(--gold);padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.45)">
+        <div class="lbl2" style="color:var(--gold2)">SPEAK WITH A LICENSED CONSULTANT · 2027 OPTIONS</div>
+        <div style="background:#fff url(assets/logo.jpg) center/contain no-repeat;background-origin:content-box;padding:14px 20px;height:170px;border-radius:18px"></div>
+        <div style="color:var(--gold2);font-weight:800;font-size:22px;margin-top:14px;letter-spacing:.5px">Helping Seniors Since 1994</div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:14px;color:#fff">
+          <svg viewBox="0 0 24 24" width="50" height="50" fill="none" stroke="#F3C94B" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></svg>
+          <div style="font-size:60px;font-weight:900;letter-spacing:-1px" id="phone"></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:16px;margin-top:8px;color:#fff;position:relative">
+          <svg viewBox="0 0 24 24" width="50" height="50" fill="none" stroke="#F3C94B" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg>
+          <div style="font-size:38px;font-weight:800" class="a" id="url"><span id="urlT">allenandassociates.agency</span></div>
+          <svg class="abs a" id="mouse" viewBox="0 0 24 24" width="44" height="44" style="left:520px;top:30px"><path d="M4 2l16 10-7 1.5L9.5 21z" fill="#fff" stroke="#0B1F3A" stroke-width="1.5"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- critical warnings -->
+  <div id="alert" class="abs a alert">
+    <svg class="wi" viewBox="0 0 24 24" fill="none" stroke="#2a1a00" stroke-width="2" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" fill="#FFE08A"/><path d="M12 9v4M12 17h.01" stroke-linecap="round" stroke-width="2.6"/></svg>
+    <div><div class="t1">GOLDEN RULE</div>
+    <div class="t2 a" id="al1T">If Medicare hasn't processed the claim,<br><span>WAIT</span> before paying a dime</div></div>
+    <div class="stamp a" id="al1S">DON'T<br>PAY YET</div>
+  </div>
+  <div id="alert2" class="abs a alert">
+    <svg class="wi" viewBox="0 0 24 24" fill="none" stroke="#2a1a00" stroke-width="2" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" fill="#FFE08A"/><path d="M12 9v4M12 17h.01" stroke-linecap="round" stroke-width="2.6"/></svg>
+    <div><div class="t1">CRITICAL WARNING</div>
+    <div class="t2 a" id="al2T">Never sign a <span>blank or incomplete</span><br>check-in screen</div></div>
+    <div class="stamp a" id="al2S">ASK<br>FIRST</div>
+  </div>
+
+  <div id="disc" class="abs a">Not connected with or endorsed by the U.S. government or the federal Medicare program. Educational only.</div>
+
+  <!-- interstitial -->
+  <div id="flipS" class="abs a">
+    <div style="font-size:30px;font-weight:900;letter-spacing:8px;color:var(--gold2);margin-bottom:26px" id="flK">CHAPTER 2</div>
+    <div class="flipRow" id="flip1"></div>
+    <div class="flipRow" id="flip2" style="margin-top:12px"></div>
+    <div style="margin-top:34px;font-size:36px;font-weight:800;color:rgba(255,255,255,.85)" id="flS">Same blood test · two very different numbers</div>
+  </div>
+
+  <!-- end card -->
+  <div id="end" class="abs a">
+    <div class="endLogo"></div>
+    <div style="margin-top:44px;font-size:76px;font-weight:900;letter-spacing:-1px">800-324-9986</div>
+    <div style="font-size:40px;font-weight:700;color:var(--gold2);margin-top:6px">allenandassociates.agency</div>
+    <div style="margin-top:30px;font-size:24px;font-weight:700;color:rgba(255,255,255,.7);letter-spacing:2px">CHECK YOUR CLAIMS ON MEDICARE.GOV BEFORE YOU PAY</div>
+  </div>
+</div>
+
+<script src="assets/vendor/gsap.min.js"></script>
+<script>
+const FPS = 25, DUR = 300.0;
+const tl = gsap.timeline({ paused: true });
+window.__timelines = window.__timelines || {};
+window.__timelines["main"] = tl;
+const $ = s => document.querySelector(s);
+
+// ---------- builders ----------
+$('#phone').innerHTML = [..."800-324-9986"].map((c, i) => `<span class="digit a" id="pd${i}">${c}</span>`).join('');
+const mk = (id, txt, cls) => { $(id).innerHTML = [...txt].map(c => c == ' ' ? '<div class="fl sp"></div>' : `<div class="fl ${cls}">${c}</div>`).join(''); };
+mk('#flip1', '$874 VS $0', 'g'); mk('#flip2', 'THE REAL BILL', '');
+const CHK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+document.querySelectorAll('.ckn .cic').forEach(e => { e.innerHTML = CHK; });
+// keep each checklist line's text (with its bold words) in one flex item
+document.querySelectorAll('.lst').forEach(row => {
+  const span = document.createElement('span');
+  [...row.childNodes].filter(n => !(n.nodeType === 1 && /\b(ckn|cic|xic)\b/.test(n.className))).forEach(n => span.appendChild(n));
+  row.appendChild(span);
+});
+
+// ---------- motion helpers (house style) ----------
+function pop(sel, t, o = {}) { tl.fromTo(sel, { autoAlpha: 0, scale: o.s ?? .6, y: o.y ?? 0, x: o.x ?? 0 }, { autoAlpha: 1, scale: 1, y: 0, x: 0, duration: o.d ?? .45, ease: o.e ?? 'back.out(1.8)', immediateRender: false }, t); }
+function rise(sel, t, o = {}) { tl.fromTo(sel, { autoAlpha: 0, y: o.y ?? 30, x: o.x ?? 0 }, { autoAlpha: 1, y: 0, x: 0, duration: o.d ?? .5, ease: o.e ?? 'power3.out', immediateRender: false, stagger: o.st ?? 0 }, t); }
+function out(sel, t, o = {}) { tl.to(sel, { autoAlpha: 0, y: o.y ?? 0, x: o.x ?? 0, scale: o.s ?? 1, duration: o.d ?? .35, ease: 'power2.in' }, t); }
+const counters = [];
+function count(el, t, from, to, dur, fmt) { const o = { v: from }; counters.push([el, o, fmt]); tl.to(o, { v: to, duration: dur, ease: 'power2.out' }, t); }
+const usd = v => '$' + v.toFixed(2);
+function tick(sel, t) { tl.fromTo(sel, { scale: 0 }, { scale: 1, duration: .3, ease: 'back.out(2.4)', immediateRender: false }, t); }
+function swipe(sel, t) { tl.fromTo(sel, { scaleX: 0 }, { scaleX: 1, duration: .45, ease: 'power2.inOut', immediateRender: false }, t); }
+function stampIn(sel, t, rot) { tl.fromTo(sel, { autoAlpha: 0, scale: 2.2, rotation: rot }, { autoAlpha: 1, scale: 1, rotation: rot, duration: .22, ease: 'power4.in', immediateRender: false }, t - .22); }
+
+// ---------- avatar layout: full frame, then shift left for the stage ----------
+// Relaxed framing: natural size, gentle 1.05 punch-ins anchored at the top so the head is never cropped.
+const LAYOUT = [[20.3, .5, -460, 1.0, 'power2.inOut'],
+  [116.2, .3, -460, 1.05, 'power3.out'], [120.3, .5, -460, 1.0, 'power2.inOut'],
+  [153.1, .3, -460, 1.05, 'power3.out'], [158.8, .5, -460, 1.0, 'power2.inOut'],
+  [198.2, .3, -460, 1.05, 'power3.out'], [208.3, .5, -460, 1.0, 'power2.inOut'],
+  [265.5, .3, -460, 1.05, 'power3.out'], [271.0, .6, -460, 1.0, 'power2.inOut']];
+LAYOUT.forEach(([t, d, dx, s, e]) => tl.to('#av', { x: dx, scale: s, duration: d, ease: e }, t));
+
+// ---------- Scene 1: the trap (0 - 20.3) ----------
+tl.fromTo('#inv', { autoAlpha: 0, x: 160, rotation: 6 }, { autoAlpha: 1, x: 0, rotation: -2, duration: .6, ease: 'power3.out', immediateRender: false }, 0.4);
+count('#invAmt', 3.96, 0, 874.46, 2.8, usd);
+stampIn('#stRed', 8.0, -8);
+stampIn('#stGreen', 10.48, 4);
+tl.to('#stRed', { opacity: .4, duration: .3 }, 10.6);
+rise('#cap1', 18.6);
+out(['#inv', '#stRed', '#stGreen', '#cap1'], 20.0, { x: 80 });
+
+// ---------- Stage + authority (20.3 - 29.4) ----------
+tl.fromTo('#stage', { autoAlpha: 0, x: 120 }, { autoAlpha: 1, x: 0, duration: .6, ease: 'power3.out', immediateRender: false }, 20.4);
+rise('#sAuth', 20.8);
+pop('#au1', 23.66, { x: -10 });
+pop('#au2', 27.2, { x: -10 });
+out('#sAuth', 29.3, { y: -30 });
+
+// ---------- Agenda (29.6 - 42.2) ----------
+rise('#sAg', 29.7);
+rise('#ag1', 31.1, { x: -20, y: 0 }); rise('#ag2', 35.12, { x: -20, y: 0 }); rise('#ag3', 38.9, { x: -20, y: 0 });
+out(['#sAg', '#ag1', '#ag2', '#ag3'], 41.9, { y: -30 });
+
+// ---------- tabs + progress ----------
+rise('#tabs', 42.2, { y: -10 }); rise(['#prog', '#progLbl'], 42.4, { y: -10 });
+const TABT = [42.4, 76.2, 116.2, 159.0, 233.8];
+const ACT = { backgroundColor: '#D4A62A', color: '#0B1F3A', borderColor: '#F3C94B', duration: .3 };
+const DONE = { backgroundColor: 'rgba(30,158,90,.22)', color: '#7be3a6', borderColor: 'rgba(123,227,166,.35)', duration: .3 };
+TABT.forEach((t, i) => {
+  if (i > 0) tl.to('#t' + i, DONE, t);
+  tl.to('#t' + (i + 1), ACT, t);
+  tl.to('#sg' + (i + 1), { scaleX: 1, duration: .6, ease: 'power2.out' }, t);
+  tl.set('#progN', { textContent: '0' + (i + 1) }, t);
+});
+tl.to('#t5', DONE, 271.28);
+
+// ---------- Chapter 1: timeline (42.4 - 76) ----------
+rise('#c1', 42.5);
+rise('#c1tl', 47.2);
+tl.to('#c1bar', { scaleX: .04, duration: .4 }, 47.6);
+pop('#mk1', 50.98, { y: 10 });
+tl.to('#c1bar', { scaleX: .31, duration: 1.4, ease: 'power2.inOut' }, 52.3);
+pop('#mk2', 53.78, { y: 10 });
+pop('#c1b', 57.3, { y: 16 }); count('#c1bv', 57.3, 0, 874.46, 2.4, usd);
+pop('#c1p', 63.3, { y: 10 });
+tl.to('#c1p', { opacity: .55, duration: .5, yoyo: true, repeat: 9, ease: 'sine.inOut' }, 63.8);
+tl.to('#c1bar', { scaleX: 1, duration: 2.2, ease: 'power2.inOut' }, 68.6);
+pop('#mk3', 70.9, { y: 10 });
+out('#c1p', 70.8);
+pop('#c1g', 70.95, { y: 16 });
+pop('#gap', 71.96, { s: .9 });
+rise('#c1w', 72.3);
+out('#c1', 75.9, { y: -30 });
+
+// ---------- Interstitial flip board (76.2 - 82.5) ----------
+tl.fromTo('#flipS', { autoAlpha: 0, clipPath: 'inset(0 100% 0 0)' }, { autoAlpha: 1, clipPath: 'inset(0 0% 0 0)', duration: .5, ease: 'power3.inOut', immediateRender: false }, 76.24);
+rise('#flK', 76.6);
+tl.fromTo('#flip1 .fl:not(.sp),#flip2 .fl:not(.sp)', { rotationX: -90, autoAlpha: 0 }, { rotationX: 0, autoAlpha: 1, duration: .4, ease: 'back.out(1.5)', stagger: .04, immediateRender: false }, 77.2);
+rise('#flS', 78.8);
+tl.to('#flipS', { clipPath: 'inset(0 0 0 100%)', duration: .5, ease: 'power3.inOut' }, 82.0);
+tl.set('#flipS', { autoAlpha: 0 }, 82.55);
+
+// ---------- Chapter 2: numbers (82.4 - 116) ----------
+rise('#c2', 82.4);
+rise('#c2r1', 84.3, { x: -20, y: 0 }); count('#c2v1', 86.58, 0, 874.46, 1.0, usd);
+rise('#c2r2', 93.02, { x: -20, y: 0 });
+pop('#c2x', 95.62, { s: .5 });
+swipe('#c2s', 101.0);
+pop('#c2p1', 101.42, { x: -10 });
+rise('#c2o', 105.6);
+pop('#c2p2', 108.56, { x: -10 }); pop('#c2p3', 110.36, { x: -10 });
+count('#c2v3', 112.8, 92.38, 0, 2.0, usd);
+pop('#c2l', 114.78, { s: .3 });
+out('#c2', 115.9, { y: -30 });
+
+// ---------- Chapter 3: Medicare.gov (116.2 - 159) ----------
+rise('#c3', 116.3);
+rise('#c3w', 116.6);
+rise('#clHome', 124.9);
+swipe('#hlGov', 123.6);
+tl.fromTo('#hlLogin', { scale: 0 }, { scale: 1, duration: .35, ease: 'back.out(2)', immediateRender: false }, 131.8);
+tl.to('#clHome', { autoAlpha: 0, x: -30, duration: .3, ease: 'power2.in' }, 134.0);
+rise('#clLogin', 134.32, { x: 30, y: 0 });
+swipe('#hlLg', 136.96); swipe('#hlId', 138.52);
+[['#c3a', 129.02], ['#c3b', 134.32], ['#c3c2', 142.06], ['#c3d', 147.46]].forEach(([s, t]) => { rise(s, t - .2, { x: -20, y: 0 }); tick(s + ' .ckn .cic', t); });
+swipe('#c3h', 151.98);
+tl.fromTo('#alert', { autoAlpha: 0, y: 320 }, { autoAlpha: 1, y: 0, duration: .55, ease: 'power3.out', immediateRender: false }, 153.1);
+rise('#al1T', 153.9);
+stampIn('#al1S', 156.48, -8);
+out('#alert', 158.6, { y: 320, d: .45 });
+out('#c3', 158.7, { y: -30 });
+
+// ---------- Chapter 4a: ABN (159 - 198.2) ----------
+rise('#c4', 159.1);
+pop('#c4p1', 163.6, { x: -10 }); pop('#c4p2', 165.06, { x: -10 });
+rise('#clAbn', 170.32); rise('#c4d', 170.6);
+pop('#c4b', 181.0, { s: .6 });
+rise('#c4w', 184.82);
+[['#c4r1', 189.64], ['#c4r2', 191.04], ['#c4r3', 193.38]].forEach(([s, t]) => { rise(s, t - .15, { x: -20, y: 0 }); tick(s + ' .ckn .cic', t); });
+swipe('#hlA1', 189.64); swipe('#hlA2', 191.04); swipe('#hlA3', 193.38); swipe('#hlA4', 195.22);
+out('#c4', 197.9, { y: -30 });
+
+// ---------- Chapter 4b: owe $0 vs wellness (198.2 - 233.8) ----------
+tl.fromTo('#alert2', { autoAlpha: 0, y: 320 }, { autoAlpha: 1, y: 0, duration: .55, ease: 'power3.out', immediateRender: false }, 198.22);
+rise('#al2T', 198.9);
+stampIn('#al2S', 203.32, -8);
+out('#alert2', 208.0, { y: 320, d: .45 });
+rise('#c5', 208.4);
+rise('#c5g', 208.62);
+pop('#c5gr', 217.1, { y: 10 });
+rise('#c5a', 220.3);
+swipe('#c5h', 227.58);
+pop('#c5ar', 229.64, { y: 10 });
+out('#c5', 233.5, { y: -30 });
+
+// ---------- Chapter 5: checklist (233.8 - 271.2) ----------
+rise('#c6', 233.9);
+[['#c6a', 240.26], ['#c6b', 247.08], ['#c6c', 251.36], ['#c6d', 260.52]].forEach(([s, t]) => { rise(s, t - .2, { x: -20, y: 0 }); tick(s + ' .ckn .cic', t); });
+pop('#c6n', 256.82, { x: -10 });
+rise('#c6w', 265.5);
+swipe('#c6h', 267.7);
+out('#c6', 270.9, { y: -30 });
+
+// ---------- Remember + CTA (271.3 - 297.2) ----------
+rise('#sRem', 271.4);
+out('#sRem', 276.5, { y: -30 });
+tl.set('#sCTA', { autoAlpha: 1 }, 276.6);
+rise('#ctaA', 276.92, { y: 30 });
+tl.fromTo('#mgov', { scale: 1 }, { scale: 1.12, duration: .18, yoyo: true, repeat: 1, ease: 'power2.out', immediateRender: false }, 281.48);
+rise('#ctaB', 283.24, { y: 40 });
+const DIG = [290.62, 290.9, 291.1, 291.3, 291.44, 291.75, 291.98, 292.22, 292.5, 292.78, 293.08, 293.34];
+DIG.forEach((t, i) => pop('#pd' + i, t, { y: -14, s: .7, d: .25 }));
+rise('#url', 294.6, { y: 10 });
+tl.fromTo('#mouse', { autoAlpha: 0, x: 120, y: 60 }, { autoAlpha: 1, x: 0, y: 0, duration: .6, ease: 'power2.out', immediateRender: false }, 294.8);
+tl.to('#urlT', { color: '#F3C94B', textDecoration: 'underline', duration: .1 }, 295.5);
+tl.to('#mouse', { scale: .85, duration: .08, yoyo: true, repeat: 1 }, 295.45);
+tl.fromTo('#disc', { autoAlpha: 0 }, { autoAlpha: 1, duration: .5, immediateRender: false }, 276.92);
+
+// ---------- End card ----------
+tl.fromTo('#end', { autoAlpha: 0 }, { autoAlpha: 1, duration: .6, ease: 'power2.out', immediateRender: false }, 297.2);
+tl.set({}, {}, DUR);
+
+// ---------- drivers ----------
+function applyCounters() { for (const [el, o, f] of counters) document.querySelector(el).textContent = f(o.v); }
+window.seek = t => { tl.seek(t, true); applyCounters(); };
+const params = new URLSearchParams(location.search);
+if (params.has('render')) {
+  document.documentElement.classList.add('render');
+  const img = $('#avimg'), bg = $('#avimgBg');
+  window.__renderFrame = async (frame, src) => {
+    window.seek(frame / FPS);
+    if (src && img.getAttribute('src') !== src) {
+      img.src = src; bg.src = src;
+      await Promise.all([img.decode(), bg.decode()]).catch(() => {});
+    }
+    return true;
+  };
+} else {
+  const v = $('#avvid');
+  window.seek(0);
+  document.addEventListener('click', () => { v.paused ? v.play() : v.pause(); });
+  (function loop() { window.seek(Math.min(v.currentTime, DUR)); requestAnimationFrame(loop); })();
+}
+</script>
+</body>
+</html>
