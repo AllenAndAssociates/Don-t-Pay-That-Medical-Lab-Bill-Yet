@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1080, height=1920">
+<title>Lab Bill Shorts</title>
+<style>
+@font-face{font-family:"Inter";font-weight:600;src:url(../hyperframes/assets/fonts/inter-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:700;src:url(../hyperframes/assets/fonts/inter-latin-700-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:800;src:url(../hyperframes/assets/fonts/inter-latin-800-normal.woff2) format("woff2")}
+@font-face{font-family:"Inter";font-weight:900;src:url(../hyperframes/assets/fonts/inter-latin-900-normal.woff2) format("woff2")}
+:root{--navy:#0B1F3A;--navy3:#1D3A66;--gold:#D4A62A;--gold2:#F3C94B;--green:#1E9E5A;--green2:#E3F5EA;--coral:#E5533D;--coral2:#FDE9E5;
+  --amber:#F2A900;--ink:#0E1B2C;--muted:#5B6B80;--line:#E3E8EF;--blue:#1B6FD1}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:1080px;height:1920px;overflow:hidden;background:#071426;font-family:Inter,sans-serif;color:var(--ink);-webkit-font-smoothing:antialiased}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:radial-gradient(circle at 50% 30%,#17345f,#071426 75%)}
+.a{visibility:hidden;opacity:0}
+.abs{position:absolute}
+svg{display:block}
+/* header */
+#hdr{left:40px;top:62px;width:1000px;display:flex;align-items:center;gap:18px}
+#hdr .k{flex:none;background:var(--gold);color:var(--navy);font-weight:900;font-size:22px;letter-spacing:2px;padding:10px 16px;border-radius:12px}
+#hdr .t{color:#fff;font-weight:900;font-size:50px;letter-spacing:-1px;line-height:1.05}
+#hdr .t span{color:var(--gold2)}
+/* avatar card: relaxed medium shot */
+#avc{left:40px;top:180px;width:1000px;height:780px;border-radius:30px;overflow:hidden;background:#2a2018;box-shadow:0 30px 70px rgba(0,0,0,.5)}
+#avc:before{content:"";position:absolute;left:0;top:0;right:0;height:6px;background:linear-gradient(90deg,var(--gold),var(--gold2),var(--gold));z-index:3}
+#avimg{position:absolute;left:-412px;top:0;width:1824px;height:1026px;transform-origin:912px 0}
+/* captions */
+#cap{left:40px;width:1000px;top:800px;text-align:center;z-index:5;pointer-events:none}
+#cap .w{display:inline-block;font-weight:900;font-size:66px;line-height:1.12;color:#fff;letter-spacing:-1px;padding:0 8px;margin:0 2px;border-radius:12px;
+  -webkit-text-stroke:3px #071426;paint-order:stroke fill;text-shadow:0 6px 18px rgba(0,0,0,.55)}
+#cap .w.on{background:var(--gold2);color:var(--navy);-webkit-text-stroke:0}
+/* graphics area */
+.card{position:absolute;left:40px;top:990px;width:1000px;background:#fff;border-radius:28px;padding:28px 30px;box-shadow:0 24px 60px rgba(0,0,0,.45)}
+.chead{display:flex;align-items:center;gap:18px;margin-bottom:16px}
+.num{flex:none;width:72px;height:72px;border-radius:18px;background:var(--navy);color:var(--gold2);font-weight:900;font-size:30px;display:flex;align-items:center;justify-content:center}
+.ttl{font-size:40px;font-weight:900;letter-spacing:-.6px;line-height:1.05;color:var(--navy)}
+.sub{font-size:22px;font-weight:600;color:var(--muted);margin-top:6px}
+.lbl2{font-size:17px;font-weight:900;letter-spacing:2px;color:var(--muted);margin-bottom:8px}
+.money{font-size:84px;font-weight:900;letter-spacing:-2px;line-height:1}
+.pill{display:inline-flex;align-items:center;gap:10px;font-weight:800;font-size:26px;padding:12px 20px;border-radius:999px;background:var(--navy);color:#fff}
+.pill.gold{background:var(--gold);color:var(--navy)}
+.pill.green{background:var(--green2);color:#0f6b3a;border:2px solid #9ad7b2}
+.pill.coral{background:var(--coral2);color:#a52b18;border:2px solid #f2b1a5}
+.pill.light{background:#EEF3F9;color:var(--navy);border:2px solid #d5deea}
+.pillrow{display:flex;gap:12px;flex-wrap:wrap}
+.part{margin-top:16px}
+.bigstat{display:flex;align-items:center;gap:20px;padding:20px 24px;border-radius:20px}
+.warnrow{display:flex;align-items:center;gap:16px;background:var(--coral2);border:2px solid #f3a99b;border-left:10px solid var(--coral);border-radius:16px;padding:16px 20px;font-size:28px;font-weight:800;color:#8f2412;margin-top:14px;line-height:1.2}
+.xic,.cic{flex:none;width:46px;height:46px;border-radius:50%;color:#fff;display:flex;align-items:center;justify-content:center}
+.xic{background:var(--coral)}.cic{background:var(--green)}
+.xic svg,.cic svg{width:28px;height:28px}
+.lst{display:flex;align-items:center;gap:16px;font-size:29px;font-weight:700;padding:6px 0;line-height:1.2}
+.lst b{color:var(--navy);font-weight:900}
+.ckn{flex:none;width:46px;height:46px;border-radius:50%;border:3px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:20px;color:var(--muted);position:relative}
+.ckn .cic{position:absolute;inset:-3px;width:auto;height:auto;transform:scale(0)}
+.box{border-radius:20px;padding:20px;border:2px solid var(--line);background:#F8FAFC}
+.stamp{border:7px solid #B3261E;color:#B3261E;font-weight:900;line-height:1.05;padding:12px 18px;border-radius:14px;text-align:center;background:rgba(255,255,255,.7)}
+.oldv{position:relative;display:inline-block}
+.oldv i{position:absolute;left:-4px;right:-4px;top:50%;height:5px;background:#8592a3;transform-origin:left;transform:scaleX(0)}
+.hb{background:#F4F6F9;border:1px solid var(--line);border-radius:16px;padding:10px 12px 12px}
+.hbtag{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:800;letter-spacing:1.3px;color:var(--muted);margin-bottom:8px}
+.hbtag i{display:inline-block;width:16px;height:16px;border-radius:4px;background:var(--blue)}
+.hbimg{position:relative;border-radius:6px;overflow:hidden;background:#fff;margin:0 auto}
+.hbimg img{display:block;width:100%;height:100%}
+.hl{position:absolute;background:rgba(255,214,0,.42);mix-blend-mode:multiply;transform-origin:left center;border-radius:3px;transform:scaleX(0)}
+.hlb{position:absolute;border:5px solid var(--coral);border-radius:8px;transform:scale(0)}
+.alert{left:40px;top:1000px;width:1000px;border-radius:28px;background:linear-gradient(90deg,#FFB400,#F29A00);box-shadow:0 30px 70px rgba(0,0,0,.5);padding:34px 36px;color:#2a1a00}
+.alert .t1{font-size:26px;font-weight:900;letter-spacing:5px;display:flex;align-items:center;gap:14px}
+.alert .t2{font-size:52px;font-weight:900;line-height:1.08;letter-spacing:-.8px;margin-top:14px}
+.alert .t2 span{background:#2a1a00;color:#FFC93C;padding:0 12px;border-radius:8px}
+.alert .stamp{display:inline-block;margin-top:22px;font-size:38px;transform:rotate(-6deg);background:rgba(255,255,255,.35)}
+.track{position:relative;height:30px;border-radius:15px;background:#E6ECF3}
+.track i{position:absolute;inset:0;transform-origin:left;transform:scaleX(0);background:linear-gradient(90deg,#1B6FD1,var(--coral) 40%,var(--green));border-radius:15px}
+.marks{position:relative;height:110px;margin-top:10px}
+.mk{position:absolute;top:0;white-space:nowrap}
+.mk .d{font-size:26px;font-weight:900}
+.mk .t{font-size:19px;font-weight:700;color:var(--muted);margin-top:2px}
+table.pd{width:100%;border-collapse:separate;border-spacing:0 10px}
+table.pd td{background:#F4F7FB;padding:18px 16px;font-size:30px;font-weight:800}
+table.pd td:first-child{border-radius:14px 0 0 14px;color:var(--navy)}
+table.pd td:last-child{border-radius:0 14px 14px 0;text-align:right}
+/* CTA */
+#cta{left:0;top:0;width:1080px;height:1920px;background:radial-gradient(circle at 50% 35%,#17345f,#071426 75%);z-index:8}
+#cta .k{position:absolute;left:0;right:0;top:250px;text-align:center;font-size:30px;font-weight:900;letter-spacing:8px;color:var(--gold2)}
+#cta .h{position:absolute;left:60px;right:60px;top:310px;text-align:center;font-size:76px;font-weight:900;color:#fff;letter-spacing:-1.5px;line-height:1.02}
+#thumb{position:absolute;left:90px;top:520px;width:900px;height:506px;border-radius:24px;overflow:hidden;border:5px solid var(--gold);box-shadow:0 34px 80px rgba(0,0,0,.6);background:url(assets/main_thumb.jpg) center/cover}
+#thumb .play{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:50%;background:rgba(229,83,61,.95);display:flex;align-items:center;justify-content:center;box-shadow:0 14px 40px rgba(0,0,0,.5)}
+#thumb .dur{position:absolute;right:16px;bottom:16px;background:rgba(0,0,0,.8);color:#fff;font-weight:800;font-size:24px;padding:6px 12px;border-radius:8px}
+#ctaTitle{position:absolute;left:90px;right:90px;top:1056px;text-align:center;color:#fff;font-size:44px;font-weight:900;line-height:1.1;letter-spacing:-.5px}
+#ctaTitle small{display:block;font-size:24px;font-weight:700;color:rgba(255,255,255,.7);margin-top:12px;letter-spacing:1px}
+#ctaLink{position:absolute;left:50%;top:1230px;transform:translateX(-50%);display:flex;align-items:center;gap:16px;background:var(--gold);color:var(--navy);font-weight:900;font-size:40px;padding:22px 36px;border-radius:999px;white-space:nowrap;box-shadow:0 18px 40px rgba(0,0,0,.45)}
+#ctaArrow{position:absolute;left:50%;top:1360px;margin-left:-36px}
+#ctaLogo{position:absolute;left:50%;bottom:120px;transform:translateX(-50%);width:560px;height:150px;background:#fff url(../hyperframes/assets/logo.jpg) center/contain no-repeat;background-origin:content-box;padding:16px 26px;border-radius:22px}
+#cta #cap2{position:absolute;left:60px;right:60px;top:1480px;text-align:center}
+#cap2 .w{display:inline-block;font-weight:900;font-size:52px;line-height:1.15;color:#fff;letter-spacing:-.5px;padding:0 8px;margin:0 2px;border-radius:10px}
+#cap2 .w.on{background:var(--gold2);color:var(--navy)}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="short" data-width="1080" data-height="1920" data-start="0" data-fps="25">
+  <div id="hdr" class="abs"><div class="k" id="hdrK"></div><div class="t" id="hdrT"></div></div>
+  <div id="avc" class="abs"><img id="avimg" alt=""></div>
+  <div id="cap" class="abs"></div>
+  <div id="gfx"></div>
+  <div id="cta" class="abs a">
+    <div class="k">WATCH THE FULL VIDEO</div>
+    <div class="h" id="ctaH"></div>
+    <div id="thumb"><div class="play"><svg width="70" height="70" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="#fff"/></svg></div><div class="dur">5:00</div></div>
+    <div id="ctaTitle">Don't Pay That Medical Lab Bill Yet<small>ALLEN &amp; ASSOCIATES · FULL BREAKDOWN</small></div>
+    <div id="ctaLink"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="#0B1F3A" stroke-width="2.6" stroke-linecap="round"><path d="M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg>Tap the link below</div>
+    <svg id="ctaArrow" width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="#F3C94B" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4v15M6 13l6 6 6-6"/></svg>
+    <div id="cap2"></div>
+    <div id="ctaLogo"></div>
+  </div>
+</div>
+
+<script src="../hyperframes/assets/vendor/gsap.min.js"></script>
+<script src="words.js"></script>
+<script>
+const FPS = 25;
+const CHK = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+const XIC = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+const BANG = '<svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"><path d="M12 6v8M12 18h.01"/></svg>';
+const WARN = '<svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#2a1a00" stroke-width="2.2" stroke-linejoin="round"><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z" fill="#FFE08A"/><path d="M12 9v4M12 17h.01" stroke-linecap="round" stroke-width="2.6"/></svg>';
+const ck = n => `<span class="ckn">${n}<span class="cic">${CHK}</span></span>`;
+
+// ---------------- the four shorts (cue times are SOURCE-video seconds) ----------------
+const SHORTS = {
+ 1: { k: 'MEDICARE', t: 'Billed <span>$874</span>. Owed <span>$0</span>.', ctaH: 'How do you know what you <span style="color:var(--gold2)">really</span> owe?',
+   edl: [[0.80, 20.40], [61.90, 76.10]],
+   html: `
+   <div class="card a" id="inv"><div class="lbl2">PATIENT STATEMENT · CLINICAL LAB</div>
+     <div style="display:flex;justify-content:space-between;font-size:26px;font-weight:700;color:var(--muted);border-bottom:2px dashed var(--line);padding:10px 0"><span>Date of service</span><b style="color:var(--navy)">Aug 13</b></div>
+     <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:18px"><span style="font-size:22px;font-weight:900;letter-spacing:2px;color:var(--navy)">AMOUNT DUE</span><span class="money" style="color:var(--coral)" id="invAmt">$0.00</span></div>
+     <div class="stamp abs a" id="stRed" style="left:40px;top:150px;font-size:34px;transform:rotate(-7deg)">AMOUNT DUE IMMEDIATELY</div>
+     <div class="abs a" id="stGreen" style="right:30px;top:120px;background:var(--green);color:#fff;border:5px solid #fff;border-radius:20px;padding:14px 26px;font-weight:900;font-size:24px;letter-spacing:1px;transform:rotate(4deg);box-shadow:0 20px 40px rgba(0,0,0,.35)">ACTUAL AMOUNT OWED<div style="font-size:76px;letter-spacing:-2px">$0.00</div></div>
+     <div style="height:150px"></div>
+   </div>
+   <div class="card a" id="warn3" style="top:1330px;background:var(--gold);display:flex;align-items:center;gap:18px;padding:22px 28px"><span style="flex:none">${WARN}</span><div style="font-size:34px;font-weight:900;color:var(--navy);line-height:1.15">Pay by mistake? Refunds can take up to <u>3 years</u>.</div></div>
+   <div class="card a" id="tlc"><div class="chead"><div class="num">1</div><div><div class="ttl">The premature bill</div><div class="sub">Real-world Medicare billing timeline</div></div></div>
+     <div class="box" style="padding:24px 22px 6px"><div class="track"><i id="bar"></i></div>
+       <div class="marks"><div class="mk" style="left:0"><div class="d" style="color:#1B6FD1">AUG 13</div><div class="t">Blood drawn</div></div>
+       <div class="mk" style="left:27%"><div class="d" style="color:var(--coral)">AUG 21</div><div class="t">$874.46 bill</div></div>
+       <div class="mk a" id="mk3" style="right:0;text-align:right"><div class="d" style="color:var(--green)">SEP 8</div><div class="t">Medicare processes</div></div></div></div>
+     <div class="pill gold a part" id="proc" style="font-size:24px">Medicare claim still processing…</div>
+     <div class="warnrow a" id="w18"><span class="xic">${BANG}</span>Billed 18 days BEFORE Medicare processed the claim</div>
+   </div>`,
+   anim: A => {
+     A.rise('#inv', 0.9); A.count('#invAmt', 3.96, 0, 874.46, 2.8); A.stamp('#stRed', 8.0, -7); A.stamp('#stGreen', 10.48, 4);
+     A.tl.to('#stRed', { opacity: .45, duration: .3 }, A.S(10.6));
+     A.rise('#warn3', 16.6); A.out(['#inv', '#warn3'], 20.2);
+     A.rise('#tlc', 61.95); A.tl.to('#bar', { scaleX: .31, duration: .8, ease: 'power2.out' }, A.S(62.3));
+     A.pop('#proc', 63.3); A.tl.to('#bar', { scaleX: 1, duration: 2.0, ease: 'power2.inOut' }, A.S(68.8));
+     A.out('#proc', 70.7); A.pop('#mk3', 70.9); A.rise('#w18', 71.96);
+   },
+   sfx: [[0.9, 'paper_slide', -26], [7.78, 'stamp_thud', -20], [10.48, 'green_chime', -25], [16.6, 'ui_pop', -27], [61.95, 'card_slide', -27], [70.9, 'ui_pop', -26], [71.96, 'warn_chime', -26]] },
+
+ 2: { k: 'MEDICARE', t: 'Same blood test. <span>$874</span> or <span>$0</span>?', ctaH: 'Where to find your <span style="color:var(--gold2)">$0</span> balance',
+   edl: [[76.10, 115.95]],
+   html: `
+   <div class="card a" id="c2"><div class="chead"><div class="num">$</div><div><div class="ttl">Lab invoice vs. Medicare</div><div class="sub">Same test, side by side</div></div></div>
+     <table class="pd">
+       <tr class="a" id="r1"><td>Lab's retail charge</td><td><span class="oldv" style="color:var(--coral)"><span id="v1">$0.00</span><i id="strike"></i></span></td></tr>
+       <tr class="a" id="r2"><td>Medicare-approved</td><td style="color:var(--navy)">$92.38</td></tr>
+     </table>
+     <div class="pillrow part"><span class="pill coral a" id="x95">9.5× Medicare's rate</span><span class="pill light a" id="asg">Assignment = payment in full</span></div>
+     <div class="bigstat part a" id="owe" style="background:var(--green2);border:3px solid var(--green);justify-content:space-between">
+       <div><div class="lbl2" style="color:#0f6b3a">YOU OWE</div><div style="font-size:24px;font-weight:800;color:#0f6b3a">Covered clinical lab test</div></div>
+       <div class="money" style="color:var(--green)" id="v3">$92.38</div></div>
+     <div class="pillrow part"><span class="pill green a" id="ded">$0 Part B deductible</span><span class="pill green a" id="coi">0% coinsurance</span></div>
+   </div>`,
+   anim: A => {
+     A.rise('#c2', 76.4); A.rise('#r1', 84.3, -20); A.count('#v1', 86.58, 0, 874.46, 1.0); A.rise('#r2', 93.02, -20);
+     A.pop('#x95', 95.62); A.swipe('#strike', 101.0); A.pop('#asg', 101.42); A.rise('#owe', 105.6);
+     A.pop('#ded', 108.56); A.pop('#coi', 110.36); A.count('#v3', 112.8, 92.38, 0, 2.0);
+   },
+   sfx: [[76.4, 'card_slide', -27], [93.02, 'ui_pop', -26], [95.62, 'ui_pop', -27], [114.78, 'padlock', -23]] },
+
+ 3: { k: 'MEDICARE.GOV', t: 'Check <span>this</span> before you pay', ctaH: 'If a test gets denied, <span style="color:var(--gold2)">one form</span> protects you',
+   edl: [[116.05, 158.60]],
+   html: `
+   <div class="card a" id="c3"><div class="chead"><div class="num">4</div><div><div class="ttl">Steps on Medicare.gov</div><div class="sub">Verify what you truly owe</div></div></div>
+     <div style="position:relative;height:300px">
+       <div class="warnrow a abs" id="cc" style="margin-top:0;left:0;right:0;top:0;font-size:34px;padding:26px 24px"><span class="xic">${XIC}</span>Don't reach for your credit card. Urgent ≠ owed.</div>
+       <div class="hb abs a" id="clHome" style="left:0;right:0;top:0"><div class="hbtag"><i></i>MEDICARE.GOV · OFFICIAL SITE</div>
+         <div class="hbimg" style="width:554px;height:250px"><img src="../hyperframes/assets/clips/medicare_home.png" alt="">
+           <div class="hl" id="hlGov" style="left:.5%;top:0;width:24%;height:3.4%"></div><div class="hlb" id="hlLogin" style="left:93.4%;top:3.6%;width:5.8%;height:8%"></div></div></div>
+       <div class="hb abs a" id="clLogin" style="left:0;right:0;top:0"><div class="hbtag"><i></i>MEDICARE.GOV · LOG IN</div>
+         <div class="hbimg" style="width:466px;height:250px"><img src="../hyperframes/assets/clips/medicare_login.png" alt="">
+           <div class="hl" id="hlLg" style="left:0;top:69%;width:100%;height:31%"></div><div class="hl" id="hlId" style="left:0;top:0;width:100%;height:30.5%"></div></div></div>
+     </div>
+     <div class="lst a" id="s1">${ck(1)}<span>Go to <b>Medicare.gov</b> → <b>Log in</b></span></div>
+     <div class="lst a" id="s2">${ck(2)}<span>Sign in: <b>Login.gov</b> or <b>ID.me</b></span></div>
+     <div class="lst a" id="s3">${ck(3)}<span>Select <b>Check My Claims</b></span></div>
+     <div class="lst a" id="s4">${ck(4)}<span>Find <b>"Total You May Be Billed"</b></span></div>
+   </div>
+   <div class="abs a alert" id="gold"><div class="t1">${WARN}GOLDEN RULE</div><div class="t2">Claim not processed yet?<br><span>WAIT</span> before paying a dime.</div><div class="stamp a" id="goldS">DON'T PAY YET</div></div>`,
+   anim: A => {
+     A.rise('#c3', 116.3); A.rise('#cc', 116.6); A.tl.to('#cc', { autoAlpha: 0, duration: .25 }, A.S(124.3)); A.rise('#clHome', 124.6); A.swipe('#hlGov', 125.0);
+     [['#s1', 129.02], ['#s2', 134.32], ['#s3', 142.06], ['#s4', 147.46]].forEach(([s, t]) => { A.rise(s, t - .2, -20); A.tick(s + ' .ckn .cic', t); });
+     A.tl.fromTo('#hlLogin', { scale: 0 }, { scale: 1, duration: .35, ease: 'back.out(2)', immediateRender: false }, A.S(131.8));
+     A.tl.to('#clHome', { autoAlpha: 0, duration: .25 }, A.S(134.0)); A.rise('#clLogin', 134.32, 30);
+     A.swipe('#hlLg', 136.96); A.swipe('#hlId', 138.52);
+     A.tl.fromTo('#gold', { autoAlpha: 0, y: 300 }, { autoAlpha: 1, y: 0, duration: .55, ease: 'power3.out', immediateRender: false }, A.S(153.1));
+     A.stamp('#goldS', 156.48, -6);
+   },
+   sfx: [[116.3, 'card_slide', -27], [129.02, 'check_ding', -27], [134.32, 'check_ding', -27], [142.06, 'check_ding', -27], [147.46, 'check_ding', -27], [153.1, 'card_slide', -24], [156.26, 'stamp_thud', -19]] },
+
+ 4: { k: 'THE ABN RULE', t: 'One form that can <span>save you</span>', ctaH: 'My 4-step <span style="color:var(--gold2)">bill protection</span> checklist',
+   edl: [[175.75, 197.70], [208.45, 233.45]],
+   html: `
+   <div class="card a" id="c4"><div class="chead"><div class="num">4</div><div><div class="ttl">The ABN</div><div class="sub">Advance Beneficiary Notice of Noncoverage</div></div></div>
+     <div style="display:flex;gap:18px;align-items:flex-start">
+       <div class="hb" style="flex:none;width:430px"><div class="hbtag"><i></i>CMS-R-131 · ABN</div>
+         <div class="hbimg" style="width:404px;height:362px"><img src="../hyperframes/assets/clips/cms_abn_form.png" alt="">
+           <div class="hl" id="a1" style="left:.6%;top:16.6%;width:40%;height:18%"></div><div class="hl" id="a2" style="left:40.8%;top:16.6%;width:38.4%;height:18%"></div>
+           <div class="hl" id="a3" style="left:79.4%;top:16.6%;width:20.4%;height:18%"></div><div class="hl" id="a4" style="left:1.5%;top:63%;width:96%;height:6.4%"></div></div></div>
+       <div style="flex:1">
+         <div class="pill a" id="bef" style="font-size:22px;padding:10px 16px">Given BEFORE your blood draw</div>
+         <div style="font-size:26px;font-weight:900;color:var(--navy);margin:16px 0 4px">Must list:</div>
+         <div class="lst a" id="q1" style="font-size:26px">${ck('')}<span>The <b>specific test</b></span></div>
+         <div class="lst a" id="q2" style="font-size:26px">${ck('')}<span>The <b>reason</b></span></div>
+         <div class="lst a" id="q3" style="font-size:26px">${ck('')}<span><b>Estimated cost</b></span></div>
+       </div></div>
+     <div class="warnrow a" id="blank"><span class="xic">${XIC}</span>Not a vague blanket waiver</div>
+   </div>
+   <div class="card a" id="c5" style="padding:24px"><div class="lbl2">WHEN YOU OWE $0, AND WHEN YOU DON'T</div>
+     <div class="box" style="border-color:#9ad7b2;background:#F3FBF6"><div style="font-size:28px;font-weight:800;line-height:1.25">Covered test denied + <b style="color:var(--navy)">no valid ABN</b></div>
+       <div class="bigstat a" id="g1" style="margin-top:12px;background:var(--green);color:#fff;padding:14px 18px"><span class="cic" style="background:#fff"><svg viewBox="0 0 24 24" fill="none" stroke="#1E9E5A" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div style="font-size:34px;font-weight:900">You generally owe $0</div></div></div>
+     <div class="box a part" id="am" style="border-color:#f5d27a;background:#FFFBEF"><div style="font-size:28px;font-weight:800;line-height:1.25">Exception: never-covered wellness test <span style="color:var(--muted)">(e.g., biological age panel)</span></div>
+       <div class="bigstat a" id="g2" style="margin-top:12px;background:var(--amber);color:#2a1a00;padding:14px 18px"><span class="xic" style="background:#2a1a00">${BANG}</span><div style="font-size:30px;font-weight:900">No ABN needed. You pay retail.</div></div></div>
+   </div>`,
+   anim: A => {
+     A.rise('#c4', 176.0); A.pop('#bef', 181.0); A.rise('#blank', 184.82);
+     [['#q1', 189.64, '#a1'], ['#q2', 191.04, '#a2'], ['#q3', 193.38, '#a3']].forEach(([s, t, h]) => { A.rise(s, t - .15, -20); A.tick(s + ' .ckn .cic', t); A.swipe(h, t); });
+     A.swipe('#a4', 195.22); A.out('#c4', 197.55);
+     A.rise('#c5', 208.5); A.pop('#g1', 217.1); A.rise('#am', 220.3); A.pop('#g2', 229.64);
+   },
+   sfx: [[176.0, 'paper_unfold', -26], [189.64, 'ui_pop', -27], [191.04, 'ui_pop', -27], [193.38, 'ui_pop', -27], [208.5, 'card_slide', -27], [217.1, 'green_chime', -26], [229.64, 'stamp_thud', -26]] },
+};
+
+// ---------------- build ----------------
+const id = +(new URLSearchParams(location.search).get('id') || 1);
+const C = SHORTS[id];
+const $ = s => document.querySelector(s);
+$('#hdrK').textContent = C.k; $('#hdrT').innerHTML = C.t; $('#ctaH').innerHTML = C.ctaH; $('#gfx').innerHTML = C.html;
+
+// source-time → short-time mapping through the edit decision list
+const SEGS = []; { let acc = 0; for (const [a, b] of C.edl) { SEGS.push({ a, b, o: acc }); acc += b - a; } }
+const VDUR = SEGS.reduce((s, g) => s + g.b - g.a, 0);
+const S = t => { for (const g of SEGS) if (t >= g.a - 1e-6 && t <= g.b + 1e-6) return g.o + t - g.a; for (const g of SEGS) if (t < g.a) return g.o; return VDUR; };
+const SRC = st => { for (const g of SEGS) if (st < g.o + (g.b - g.a)) return g.a + (st - g.o); const l = SEGS[SEGS.length - 1]; return l.b; };
+const CTA_AT = VDUR + 0.35, CTA_VO = CTA_AT + 0.5;
+const ctaWords = WORDS['cta' + id];
+const DUR = CTA_VO + ctaWords[ctaWords.length - 1][2] + 1.4;
+
+const tl = gsap.timeline({ paused: true });
+window.__timelines = { short: tl };
+const counters = [];
+const A = {
+  tl, S,
+  rise: (sel, t, dx = 0) => tl.fromTo(sel, { autoAlpha: 0, y: dx ? 0 : 30, x: dx }, { autoAlpha: 1, y: 0, x: 0, duration: .5, ease: 'power3.out', immediateRender: false }, S(t)),
+  pop: (sel, t) => tl.fromTo(sel, { autoAlpha: 0, scale: .6 }, { autoAlpha: 1, scale: 1, duration: .45, ease: 'back.out(1.8)', immediateRender: false }, S(t)),
+  out: (sel, t) => tl.to(sel, { autoAlpha: 0, y: -30, duration: .3, ease: 'power2.in' }, S(t)),
+  tick: (sel, t) => tl.fromTo(sel, { scale: 0 }, { scale: 1, duration: .3, ease: 'back.out(2.4)', immediateRender: false }, S(t)),
+  swipe: (sel, t) => tl.fromTo(sel, { scaleX: 0 }, { scaleX: 1, duration: .45, ease: 'power2.inOut', immediateRender: false }, S(t)),
+  stamp: (sel, t, rot) => tl.fromTo(sel, { autoAlpha: 0, scale: 2.2, rotation: rot }, { autoAlpha: 1, scale: 1, rotation: rot, duration: .22, ease: 'power4.in', immediateRender: false }, S(t) - .22),
+  count: (sel, t, from, to, d) => { const o = { v: from }; counters.push([sel, o]); tl.to(o, { v: to, duration: d, ease: 'power2.out' }, S(t)); },
+};
+C.anim(A);
+// header + avatar entrance
+tl.fromTo('#hdr', { autoAlpha: 0, y: -20 }, { autoAlpha: 1, y: 0, duration: .45, ease: 'power3.out', immediateRender: false }, 0);
+// CTA screen
+tl.fromTo('#cta', { autoAlpha: 0, clipPath: 'inset(100% 0 0 0)' }, { autoAlpha: 1, clipPath: 'inset(0% 0 0 0)', duration: .5, ease: 'power3.inOut', immediateRender: false }, CTA_AT);
+tl.fromTo('#thumb', { autoAlpha: 0, scale: .85 }, { autoAlpha: 1, scale: 1, duration: .55, ease: 'back.out(1.6)', immediateRender: false }, CTA_AT + .35);
+tl.fromTo('#ctaLink', { autoAlpha: 0, y: 30 }, { autoAlpha: 1, y: 0, duration: .45, ease: 'power3.out', immediateRender: false }, CTA_AT + .9);
+tl.fromTo('#ctaArrow', { y: 0 }, { y: 22, duration: .45, yoyo: true, repeat: 30, ease: 'sine.inOut', immediateRender: false }, CTA_AT + 1.0);
+tl.fromTo('#thumb .play', { scale: 1 }, { scale: 1.1, duration: .5, yoyo: true, repeat: 20, ease: 'sine.inOut', immediateRender: false }, CTA_AT + 1.2);
+tl.set({}, {}, DUR);
+
+// ---------------- captions ----------------
+function chunk(words, map, end) {
+  const out = []; let cur = [];
+  const push = () => { if (cur.length) out.push(cur); cur = []; };
+  words.forEach((w, i) => {
+    const prev = cur[cur.length - 1];
+    if (prev && (cur.length >= 3 || w.s - prev.e > .35 || /[.,?!;:]$/.test(prev.text))) push();
+    cur.push(w);
+  });
+  push();
+  return out.map((c, i) => ({ words: c, s: c[0].s, e: (out[i + 1] ? Math.min(out[i + 1][0].s, c[c.length - 1].e + .6) : Math.min(end, c[c.length - 1].e + .6)) }));
+}
+const mainW = [];
+for (const g of SEGS) for (const [text, s, e] of WORDS.main) if (s >= g.a - .05 && e <= g.b + .15) mainW.push({ text, s: g.o + s - g.a, e: g.o + Math.min(e, g.b) - g.a });
+const CH1 = chunk(mainW, null, VDUR);
+const CH2 = chunk(ctaWords.map(([text, s, e]) => ({ text, s: CTA_VO + s, e: CTA_VO + e })), null, DUR);
+const fix = t => t.replace(/^Eric$/, 'Arric');
+function drawCaps(el, chunks, t) {
+  const c = chunks.find(c => t >= c.s && t < c.e);
+  const key = c ? c.s + ':' + c.words.findIndex(w => t >= w.s && t < w.e + .05) : '';
+  if (el.dataset.k === key) return; el.dataset.k = key;
+  el.innerHTML = c ? c.words.map(w => `<span class="w${t >= w.s && t < w.e + .05 ? ' on' : ''}">${fix(w.text).toUpperCase()}</span>`).join(' ') : '';
+}
+
+// ---------------- drivers ----------------
+window.SHORT = { id, edl: C.edl, VDUR, CTA_VO, DUR, sfx: C.sfx.map(([t, f, db]) => [S(t), f, db]) };
+window.SRC = SRC;
+window.seek = t => {
+  tl.seek(t, true);
+  for (const [sel, o] of counters) document.querySelector(sel).textContent = '$' + o.v.toFixed(2);
+  drawCaps($('#cap'), CH1, t); drawCaps($('#cap2'), CH2, t);
+  $('#cap').style.visibility = t < CTA_AT ? 'visible' : 'hidden';
+};
+window.__renderFrame = async (frame, src) => {
+  window.seek(frame / FPS);
+  const img = $('#avimg');
+  if (src && img.getAttribute('src') !== src) { img.src = src; await img.decode().catch(() => {}); }
+  return true;
+};
+window.seek(0);
+</script>
+</body>
+</html>
